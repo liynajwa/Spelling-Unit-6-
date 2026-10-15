@@ -1,0 +1,246 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#201542">
+<title>Spell & Escape: The Old House</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap');
+:root{--ink:#241b43;--purple:#7453e8;--pink:#ff79b7;--mint:#65e3b4;--yellow:#ffd85d;--sky:#7dc8ff;--paper:#fffaf2;--muted:#716b83;--good:#158653;--bad:#d9435f}
+*{box-sizing:border-box}
+html{min-height:100%;background:#201542;scroll-behavior:smooth}
+body{margin:0;min-height:100%;font-family:'Baloo 2',system-ui,sans-serif;color:var(--ink);background:radial-gradient(circle at 15% 0%,#5a3c9d 0,#28204e 45%,#17132d 100%);overflow-x:hidden}
+button,input{font:inherit}
+button{touch-action:manipulation;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid #ffca58;outline-offset:3px}
+#app{width:min(100%,560px);margin:0 auto;min-height:100dvh;padding:12px 12px calc(24px + env(safe-area-inset-bottom))}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;color:white;margin:2px 2px 12px}
+.brand{font-weight:800;line-height:1.05;font-size:1.12rem;letter-spacing:.2px}
+.brand small{display:block;font-size:.72rem;font-weight:600;color:#d7cdfd;letter-spacing:1.2px;text-transform:uppercase}
+.pill{border:1px solid #ffffff35;background:#ffffff14;color:white;border-radius:99px;padding:6px 11px;font-size:.85rem;white-space:nowrap}
+.panel{background:var(--paper);border:3px solid #fff;border-radius:24px;padding:15px;box-shadow:0 12px 0 #120e2c55,0 20px 40px #100b292b;margin-bottom:14px}
+.hero{text-align:center;padding:18px 15px 16px;overflow:hidden;position:relative}
+.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,#fff5c8,#ffe3ef 45%,#e6e2ff);z-index:0}
+.hero>*{position:relative;z-index:1}
+.kicker{display:inline-block;background:#fff;border:2px solid #f1dcff;color:#7652c7;border-radius:99px;padding:3px 12px;font-size:.78rem;font-weight:800;letter-spacing:.7px}
+h1{font-size:clamp(2rem,9vw,3.05rem);line-height:.98;margin:12px 0 7px;color:#392568;text-shadow:0 3px 0 #fff}
+.hero p{margin:8px auto 14px;max-width:330px;color:#66577f;line-height:1.35}
+.primary,.secondary,.softbtn{border:0;border-radius:16px;padding:11px 18px;font-weight:800;box-shadow:0 4px 0 #00000018;transition:transform .12s,filter .12s}
+.primary{background:linear-gradient(180deg,#8b70ff,#6849df);color:white}
+.secondary{background:#e8e4f6;color:#51456f}
+.softbtn{background:#fff;color:#5c4d84;border:2px solid #e6def8;padding:8px 12px}
+.primary:active,.secondary:active,.softbtn:active,.letter:active,.tile:active{transform:translateY(2px);box-shadow:0 2px 0 #00000018}
+.full{width:100%}
+.scene-wrap{padding:0;overflow:hidden;background:#dcd6ff}
+.scene-head{padding:12px 14px 0;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.scene-head strong{font-size:1.05rem}
+.room-count{font-size:.8rem;color:#655b7c;font-weight:800;background:#fff9;border-radius:99px;padding:4px 9px}
+.scene{height:270px;position:relative;overflow:hidden;perspective:800px;isolation:isolate;background:linear-gradient(#b8dfff 0%,#e7e8ff 58%,#d9c7a7 58%,#c2a982 100%);border-top:3px solid #fff;border-bottom:3px solid #fff;margin-top:10px}
+.scene:before{content:"";position:absolute;left:-8%;right:-8%;bottom:0;height:42%;background:repeating-linear-gradient(90deg,#bfa57d 0 54px,#d1b68b 55px 58px);transform:perspective(220px) rotateX(8deg);transform-origin:bottom;z-index:-1}
+.wall{position:absolute;inset:0 0 40% 0;background:linear-gradient(90deg,#d5caff,#f6e9f3 50%,#d3d8ff);clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
+.wall:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 68px,#ffffff20 69px 72px)}
+.window{position:absolute;top:30px;left:10%;width:72px;height:78px;border:7px solid #795e94;border-radius:5px;background:linear-gradient(#a8ddff 0 50%,#d6f4ff 51%);box-shadow:inset 0 0 0 3px #fff;z-index:1}
+.window:before,.window:after{content:"";position:absolute;background:#795e94}
+.window:before{width:5px;height:100%;left:50%;top:0}
+.window:after{height:5px;width:100%;left:0;top:50%}
+.picture{position:absolute;top:42px;right:12%;width:58px;height:66px;border:5px solid #806a8f;background:#fff0b4;border-radius:5px;display:grid;place-items:center;font-size:30px;transform:rotate(3deg);z-index:1}
+.baseboard{position:absolute;bottom:38%;left:0;right:0;height:10px;background:#a88bb4;border-top:3px solid #f7e5f6;z-index:1}
+.door3d{position:absolute;z-index:3;bottom:38%;left:50%;transform:translateX(-50%);width:100px;height:158px;border:8px solid #78533d;border-bottom:0;border-radius:8px 8px 0 0;background:linear-gradient(90deg,#a66d48,#c58b5e 50%,#945d40);box-shadow:inset 0 0 0 5px #e3b184,8px 0 0 #65422f;transform-origin:left center;transition:transform .65s cubic-bezier(.2,.7,.2,1)}
+.door3d:before{content:"";position:absolute;inset:12px 12px 8px;border:4px solid #e5b78b;border-radius:3px;background:linear-gradient(135deg,#b57a52,#d49a6b)}
+.door3d:after{content:"";position:absolute;width:9px;height:9px;border-radius:50%;background:#ffe16e;right:13px;top:76px;box-shadow:0 0 0 2px #875c3e}
+.door3d.open{transform:translateX(-50%) rotateY(-62deg)}
+.rug{position:absolute;bottom:8px;left:24%;width:52%;height:40px;background:#d98eb7;border:5px solid #f5c7df;border-radius:50%;transform:rotateX(55deg);z-index:1}
+.room-prop{position:absolute;bottom:38%;z-index:2;font-size:clamp(36px,10vw,54px);filter:drop-shadow(0 6px 0 #00000016);animation:bob 2.5s ease-in-out infinite}
+.prop-left{left:9%}.prop-right{right:8%;animation-delay:.6s}
+.room-label{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:4;background:#fffdf0;border:2px solid #fff;border-radius:99px;padding:4px 14px;font-size:.82rem;font-weight:800;box-shadow:0 3px 0 #0002;white-space:nowrap}
+@keyframes bob{0%,100%{translate:0 0}50%{translate:0 -7px}}
+.progressrow{display:flex;align-items:center;gap:10px;margin:12px 0 2px}
+.progress{height:10px;flex:1;background:#e9e3f5;border-radius:99px;overflow:hidden}
+.progress>span{display:block;height:100%;width:0;background:linear-gradient(90deg,#6b4ce6,#ff79b7);border-radius:99px;transition:width .3s}
+.progresslabel{font-size:.8rem;font-weight:800;color:#74698a;white-space:nowrap}
+.challenge{padding:14px}
+.challenge-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.challenge-top h2{font-size:1.2rem;margin:0}
+.tag{font-size:.75rem;background:#eee8ff;color:#6746be;border-radius:99px;padding:4px 9px;font-weight:800}
+.instruction{font-size:.9rem;color:#756b85;margin:0 0 10px;line-height:1.25}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;max-width:310px;margin:0 auto 9px}
+.tile{border:0;border-radius:10px;aspect-ratio:1;background:linear-gradient(145deg,#ffbd67,#ff8f82);box-shadow:0 4px 0 #d86d64;color:#fff;font-size:1.2rem;font-weight:800;transition:transform .12s,opacity .2s;min-width:0}
+.tile:nth-child(4n+2){background:linear-gradient(145deg,#ff8ac0,#ed63a0);box-shadow:0 4px 0 #ce4d88}
+.tile:nth-child(4n+3){background:linear-gradient(145deg,#8bd5ff,#5aa5f2);box-shadow:0 4px 0 #4086d1}
+.tile:nth-child(4n){background:linear-gradient(145deg,#a994ff,#7c65e8);box-shadow:0 4px 0 #624ac8}
+.tile.revealed{background:#fff;border:2px solid #d6c9f1;box-shadow:none;transform:scale(.97);color:var(--ink);font-size:clamp(1.45rem,8vw,2.2rem)}
+.tile:disabled{cursor:default;opacity:1}
+.picture-caption{text-align:center;font-size:.82rem;color:#82768f;min-height:22px;margin:0 0 10px}
+.answer-slots{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;min-height:45px;margin:8px 0 11px}
+.slot{width:clamp(27px,7.2vw,36px);height:40px;border:2px solid #d8d0e6;border-bottom-width:4px;border-radius:9px;background:#fff;display:grid;place-items:center;font-size:1.12rem;font-weight:800;cursor:pointer;color:#45335e}
+.slot.space{width:12px;border:0;background:transparent;box-shadow:none;cursor:default}
+.slot.filled{background:#f3efff;border-color:#b8a5ef}
+.slot.bad{background:#ffe5e8;border-color:#ee8c9a}
+.letterbank{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;max-width:390px;margin:0 auto 12px}
+.letter{width:43px;height:43px;max-width:calc((100vw - 66px)/6);border:0;border-radius:12px;background:linear-gradient(180deg,#fff,#e8e4f8);box-shadow:0 4px 0 #c8bfdc;color:#40305d;font-size:1.16rem;font-weight:800}
+.letter.used{opacity:.24;box-shadow:none;transform:scale(.92);cursor:default}
+.controls{display:flex;gap:8px}.controls button{flex:1}
+.feedback{display:none;border-radius:13px;padding:9px 11px;font-weight:800;text-align:center;margin:10px 0 0;line-height:1.25}
+.feedback.show{display:block}.feedback.good{background:#d9f9e9;color:#126a45}.feedback.bad{background:#ffe2e8;color:#a52d4b}.feedback.info{background:#eee8ff;color:#6044b2}
+.bottom-actions{display:flex;justify-content:space-between;gap:8px;margin-top:10px}
+.mini{font-size:.82rem;color:#80758e;text-align:center;margin:12px 4px 0}
+.room-map{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.room-card{border:2px solid #e8def8;border-radius:15px;padding:10px;background:#fff;text-align:left;display:flex;align-items:center;gap:9px;color:var(--ink);min-width:0}
+.room-card .emoji{font-size:1.65rem}.room-card small{display:block;color:#85798f;font-size:.73rem}.room-card.done{background:#e4fff1;border-color:#8bdfb7}.room-card.current{border-color:#9a81ff;background:#f5f0ff}
+.hidden{display:none!important}
+.modal{position:fixed;inset:0;background:#17102bc9;display:grid;place-items:center;padding:18px;z-index:20}
+.modal-card{width:min(100%,390px);background:var(--paper);border:4px solid white;border-radius:26px;padding:22px;text-align:center;box-shadow:0 18px 0 #09061c55}
+.modal-emoji{font-size:4rem;line-height:1.1}
+.modal-card h2{font-size:1.8rem;line-height:1.05;margin:8px 0}
+.modal-card p{color:#756b85;line-height:1.35}
+.name-input{width:100%;border:2px solid #ddd2f2;border-radius:13px;padding:11px 12px;margin:7px 0 14px;color:var(--ink);background:white}
+.score-list{display:grid;gap:7px;text-align:left;margin:14px 0}.score-entry{display:flex;justify-content:space-between;background:#f0eaff;border-radius:10px;padding:7px 10px;font-weight:800}
+@media(min-width:480px){#app{padding-top:18px}.scene{height:300px}.door3d{height:175px;width:112px}.tile{border-radius:12px}}
+@media(max-width:360px){#app{padding-left:8px;padding-right:8px}.panel{padding:11px;border-radius:20px}.scene{height:235px}.door3d{height:135px;width:86px}.window{width:60px;height:65px}.letter{width:38px;height:40px}.tile{border-radius:8px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand">SPELL & ESCAPE <small>THE OLD HOUSE · YEAR 2</small></div>
+    <div class="pill" id="scorePill">⭐ 0 stars</div>
+  </header>
+
+  <section id="intro" class="panel hero">
+    <span class="kicker">13 SPELLING MISSIONS</span>
+    <h1>THE OLD<br>HOUSE</h1>
+    <div style="font-size:3.2rem;line-height:1.15">🏚️🗝️✨</div>
+    <p>Explore six mysterious rooms, reveal hidden pictures and spell the words to unlock the doors!</p>
+    <button class="primary full" id="startBtn">ENTER THE HOUSE →</button>
+    <p class="mini">Tap to play · Made for mobile screens</p>
+  </section>
+
+  <section id="game" class="hidden">
+    <section class="panel scene-wrap">
+      <div class="scene-head"><strong id="roomTitle">Bedroom</strong><span class="room-count" id="roomCount">ROOM 1 / 6</span></div>
+      <div class="scene" id="scene" aria-label="A colourful 3D-style old house room">
+        <div class="wall"></div><div class="window"></div><div class="picture" id="wallPicture">🖼️</div>
+        <div class="baseboard"></div><div class="rug"></div>
+        <div class="room-prop prop-left" id="propLeft">🛏️</div>
+        <div class="room-prop prop-right" id="propRight">🪴</div>
+        <div class="door3d" id="door"></div>
+        <div class="room-label" id="sceneLabel">Find the hidden word!</div>
+      </div>
+      <div class="progressrow"><div class="progress"><span id="progressFill"></span></div><span class="progresslabel" id="progressLabel">1 / 13</span></div>
+    </section>
+
+    <section class="panel challenge">
+      <div class="challenge-top"><h2>🔎 Reveal & spell</h2><span class="tag" id="wordTag">WORD 1</span></div>
+      <p class="instruction">1. Tap the tiles to reveal the picture. 2. Tap the letters to spell the word.</p>
+      <div class="tiles" id="tiles" aria-label="Picture reveal puzzle tiles"></div>
+      <p class="picture-caption" id="pictureCaption">Tap a tile to uncover the picture!</p>
+      <div class="answer-slots" id="answerSlots" aria-label="Your spelling answer"></div>
+      <div class="letterbank" id="letterBank" aria-label="Jumbled letters"></div>
+      <div class="controls"><button class="secondary" id="clearBtn">⌫ Clear</button><button class="primary" id="checkBtn">CHECK ✓</button></div>
+      <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+      <div class="bottom-actions"><button class="softbtn" id="hintBtn">💡 Hint</button><button class="softbtn" id="skipRevealBtn">Reveal all tiles</button></div>
+    </section>
+
+    <section class="panel">
+      <div class="challenge-top"><h2>🗺️ House map</h2><span class="tag" id="doneTag">0 / 13 done</span></div>
+      <div class="room-map" id="roomMap"></div>
+    </section>
+    <p class="mini">Tip: Tap a filled answer letter to remove it. Spell carefully to earn stars!</p>
+  </section>
+</div>
+
+<div class="modal hidden" id="modal">
+  <div class="modal-card">
+    <div class="modal-emoji" id="modalEmoji">🗝️</div>
+    <h2 id="modalTitle">Ready to escape?</h2>
+    <p id="modalText">Enter your name and explore the Old House!</p>
+    <input class="name-input" id="playerName" maxlength="18" placeholder="Your name (optional)" aria-label="Player name">
+    <button class="primary full" id="modalMainBtn">LET'S GO!</button>
+    <button class="secondary full" id="modalAltBtn" style="margin-top:9px">Not now</button>
+  </div>
+</div>
+
+<script>
+(() => {
+'use strict';
+const rooms = [
+  {name:'Bathroom',emoji:'🛁',left:'🪞',right:'🧼',wall:'🫧'},
+  {name:'Bedroom',emoji:'🛏️',left:'🛏️',right:'🧸',wall:'🌙'},
+  {name:'Dining room',emoji:'🍽️',left:'🪑',right:'🍲',wall:'🖼️'},
+  {name:'Living room',emoji:'🛋️',left:'🛋️',right:'📺',wall:'🖼️'},
+  {name:'Kitchen',emoji:'🍳',left:'🧊',right:'🍎',wall:'🍋'},
+  {name:'Cellar',emoji:'🕯️',left:'🛢️',right:'🕸️',wall:'🕯️'}
+];
+const words = [
+  {word:'BATHROOM',type:'room',room:0,emoji:'🛁',clue:'A room where you wash.',distractors:'EILP'},
+  {word:'BEDROOM',type:'room',room:1,emoji:'🛏️',clue:'A room where you sleep.',distractors:'ACST'},
+  {word:'DINING ROOM',type:'room',room:2,emoji:'🍽️',clue:'A room where you eat meals.',distractors:'BPKS'},
+  {word:'LIVING ROOM',type:'room',room:3,emoji:'🛋️',clue:'A room where the family relaxes.',distractors:'ADPK'},
+  {word:'KITCHEN',type:'room',room:4,emoji:'🍳',clue:'A room where food is cooked.',distractors:'BRS'},
+  {word:'CELLAR',type:'room',room:5,emoji:'🕯️',clue:'A room under a house.',distractors:'BKT'},
+  {word:'SPIDERS',type:'creature',room:5,emoji:'🕷️',clue:'These eight-legged creatures make webs.',distractors:'AOU'},
+  {word:'DUCKS',type:'creature',room:2,emoji:'🦆',clue:'These birds can swim and quack.',distractors:'EPR'},
+  {word:'CATS',type:'creature',room:3,emoji:'🐈',clue:'These pets say “meow”.',distractors:'OD'},
+  {word:'LIZARDS',type:'creature',room:4,emoji:'🦎',clue:'These reptiles have scaly skin.',distractors:'ET'},
+  {word:'MONSTERS',type:'creature',room:5,emoji:'👾',clue:'Imaginary spooky creatures!',distractors:'AD'},
+  {word:'ELEPHANTS',type:'creature',room:0,emoji:'🐘',clue:'These large animals have trunks.',distractors:'BKS'},
+  {word:'DOGS',type:'creature',room:1,emoji:'🐕',clue:'These pets often bark.',distractors:'AC'}
+];
+const $ = id => document.getElementById(id);
+const state = {started:false,player:'Player',index:0,score:0,stars:0,completed:new Set(),answer:[],letters:[],revealed:new Set(),attempts:0,usedHint:false,roundPerfect:true,roomUnlocked:0};
+const roomWordIndices = [[0,11],[1,12],[2,7],[3,8],[4,9],[5,6,10]];
+const shuffle = arr => {const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const normal = s => s.toUpperCase().replace(/[^A-Z]/g,'');
+function activeRoom(){return words[state.index].room;}
+function updateScore(){ $('scorePill').textContent=`⭐ ${state.stars} ${state.stars===1?'star':'stars'}`; }
+function showFeedback(message,type='info'){const f=$('feedback');f.textContent=message;f.className=`feedback show ${type}`;}
+function hideFeedback(){ $('feedback').className='feedback'; }
+function renderRoom(){
+  const room=rooms[activeRoom()];
+  $('roomTitle').textContent=room.name;$('roomCount').textContent=`ROOM ${activeRoom()+1} / 6`;
+  $('propLeft').textContent=room.left;$('propRight').textContent=room.right;$('wallPicture').textContent=room.wall;
+  $('sceneLabel').textContent=room.name;
+  $('door').classList.remove('open');
+  $('scene').style.background=activeRoom()===5?'linear-gradient(#9c9ac2 0%,#c8c3df 58%,#9d826d 58%,#866b5c 100%)':'linear-gradient(#b8dfff 0%,#e7e8ff 58%,#d9c7a7 58%,#c2a982 100%)';
+  $('roomMap').innerHTML=rooms.map((r,i)=>{
+    const related=roomWordIndices[i],done=related.filter(n=>state.completed.has(n)).length;
+    const cls=done===related.length?'done':i===activeRoom()?'current':'';
+    return `<div class="room-card ${cls}"><span class="emoji">${r.emoji}</span><div><strong>${r.name}</strong><small>${done}/${related.length} words</small></div></div>`;
+  }).join('');
+}
+function makeLetters(word){
+  const target=normal(word);
+  const extraCount=Math.min(4,Math.max(2,Math.ceil(target.length*.25)));
+  const extras=shuffle('AEIOUBCDGKLMNPRST').filter(ch=>!target.includes(ch)).slice(0,extraCount);
+  return shuffle([...target.split(''),...extras]);
+}
+function renderPuzzle(){
+  const item=words[state.index];
+  $('wordTag').textContent=`WORD ${state.index+1} / ${words.length}`;
+  $('progressLabel').textContent=`${state.index+1} / ${words.length}`;
+  $('progressFill').style.width=`${state.completed.size/words.length*100}%`;
+  $('doneTag').textContent=`${state.completed.size} / ${words.length} done`;
+  $('tiles').innerHTML='';
+  const count=Math.max(8,Math.min(12,Math.ceil(normal(item.word).length*1.15)));
+  for(let i=0;i<count;i++){
+    const b=document.createElement('button');b.className='tile';b.textContent='?';b.setAttribute('aria-label',`Reveal picture tile ${i+1}`);
+    if(state.revealed.has(i)){b.classList.add('revealed');b.textContent=item.emoji;b.disabled=true;}
+    b.addEventListener('click',()=>revealTile(i));$('tiles').appendChild(b);
+  }
+  $('pictureCaption').textContent=state.revealed.size===count?`${item.emoji} What is this?`:`${state.revealed.size} of ${count} tiles revealed`;
+  renderSlots();renderLetterBank();renderRoom();
+}
+function revealTile(i){
+  state.revealed.add(i);const count=$('tiles').children.length;
+  const btn=$('tiles').children[i];if(btn){btn.classList.add('revealed');btn.textContent=words[state.index].emoji;btn.disabled=true;}
+  $('pictureCaption').textContent=state.revealed.size===count?`${words[state.index].emoji} What is this?`:`${state.revealed.size} of ${count} tiles revealed`;
+}
+function revealAll(){const count=$('tiles').children.length;for(let i=0;i<count;i++)revealTile(i);}
+function renderSlots(){
+  const item=words[state.index];const wrap=$('answerSlots');wrap.innerHTML='';
+  let letterIndex=0;
+  for(const ch of item.word){
+    if(ch===' '){const sp=document.createElement('div');sp.className='slot space';sp.setAttribute('aria-label','space');wrap.appendC
